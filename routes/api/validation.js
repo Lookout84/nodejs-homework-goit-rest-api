@@ -1,5 +1,5 @@
 const Joi = require("joi");
-// const phoneJoi = Joi.extend(require("joi-phone-number"));
+const mongoose = require("mongoose");
 
 const schemaCreateContact = Joi.object({
   name: Joi.string().min(3).max(30).required(),
@@ -16,6 +16,7 @@ const schemaCreateContact = Joi.object({
       "string.pattern.base": `Phone number must have 12 digits.`,
     })
     .required(),
+  favorite: Joi.boolean().required(),
 });
 
 const schemaUpdateContact = Joi.object({
@@ -33,7 +34,12 @@ const schemaUpdateContact = Joi.object({
       "string.pattern.base": `Phone number must have 12 digits.`,
     })
     .optional(),
-}).or("name", "email", "phone");
+  favorite: Joi.boolean().optional(),
+}).or("name", "email", "phone", "favorite");
+
+const schemaUpdateFavoriteStatus = Joi.object({
+  favorite: Joi.boolean().required(),
+});
 
 const validate = async (schema, obj, next) => {
   try {
@@ -53,5 +59,21 @@ module.exports = {
   },
   validationUpdateContact: (req, res, next) => {
     return validate(schemaUpdateContact, req.body, next);
+  },
+  validationUpdateFavoriteStatus: (req, res, next) => {
+    return validate(schemaUpdateFavoriteStatus, req.body, next);
+  },
+  validateContactId: (req, res, next) => {
+    if (
+      !mongoose.isValidObjectId(
+        new mongoose.Types.ObjectId(req.params.contactId)
+      )
+    ) {
+      return next({
+        status: 400,
+        message: "Invalid ObjectId",
+      });
+    }
+    next();
   },
 };
