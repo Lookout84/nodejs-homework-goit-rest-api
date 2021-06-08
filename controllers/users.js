@@ -40,10 +40,11 @@ const login = async (req, res, next) => {
       });
     }
     const id = user.id;
-    const payload = { id, test: "test" };
+    const subscription = user.subscription;
+    const payload = { id, subscription };
     const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "2h" });
     await Users.updateToken(id, token);
-    return res.json({ status: "success", code: 200, data: { token } });
+    return res.json({ status: "OK", code: HttpCode.OK, data: { token } });
   } catch (e) {
     next(e);
   }
@@ -53,10 +54,24 @@ const logout = async (req, res, next) => {
   try {
     const id = req.user.id;
     await Users.updateToken(id, null);
-    return res.status(HttpCode.NO_CONTENT).json({});
+    return res.status(HttpCode.NO_CONTENT).json({status: "No Content"});
   } catch (e) {
     next(e);
   }
 };
 
-module.exports = { register, login, logout };
+const currentUser = async (req, res, next) => {
+  try {
+    const id = req.user.id;
+    const { name, email, subscription } = await Users.findById(id);
+    return res.status(HttpCode.CREATED).json({
+      status: "OK",
+      code: HttpCode.OK,
+      user: { name, email, subscription },
+    });
+  } catch (e) {
+    next(e);
+  }
+};
+
+module.exports = { register, login, logout, currentUser };
