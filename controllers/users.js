@@ -12,7 +12,7 @@ const register = async (req, res, next) => {
       return res.status(HttpCode.CONFLICT).json({
         status: "error",
         code: HttpCode.CONFLICT,
-        message: "Email in use",
+        message: "Email or name in use",
       });
     }
 
@@ -47,18 +47,16 @@ const login = async (req, res, next) => {
   } catch (e) {
     next(e);
   }
-};  
-
+};
 
 const logout = async (req, res, next) => {
-    try {
-      const id = req.user.id
-      await Users.updateToken(id, null)
-      return res.status(HttpCode.NO_CONTENT).json({})
-    } catch (e) {
-      next(e)
-    }
+  try {
+    const id = req.user.id;
+    await Users.updateToken(id, null);
+    return res.status(HttpCode.NO_CONTENT).json({});
+  } catch (e) {
+    next(e);
   }
+};
 
-
-module.exports = { register, login, logout }
+module.exports = { register, login, logout };
