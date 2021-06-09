@@ -18,7 +18,7 @@ const guard = (req, res, next) => {
       });
     }
 
-    req.user = user; // res.locals.user = user
+    req.user = user;
     return next();
   })(req, res, next);
 };
