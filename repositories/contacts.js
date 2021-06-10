@@ -53,10 +53,7 @@ const removeContact = async (userId, contactId) => {
 };
 
 const addContact = async (userId, body) => {
-  const result = await Contact.create({ owner: userId, body }).populate({
-    path: "owner",
-    select: "name email subscription",
-  });
+  const result = await Contact.create({ owner: userId, ...body });
   return result;
 };
 
