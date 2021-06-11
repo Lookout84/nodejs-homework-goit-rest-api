@@ -22,6 +22,10 @@ const schemaLoginUser = Joi.object({
   password: Joi.string().pattern(new RegExp("^[a-zA-Z0-9]+$")).required(),
 });
 
+const schemaUpdateUserSubscription = Joi.object({
+  subscription: Joi.string().valid("starter", "pro", "business").required(),
+});
+
 const validate = async (schema, obj, next) => {
   try {
     await schema.validateAsync(obj);
@@ -40,5 +44,8 @@ module.exports = {
   },
   validationLoginUser: (req, res, next) => {
     return validate(schemaLoginUser, req.body, next);
+  },
+  validationUpdateUserSubscription: (req, res, next) => {
+    return validate(schemaUpdateUserSubscription, req.body, next);
   },
 };

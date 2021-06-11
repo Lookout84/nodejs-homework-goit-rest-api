@@ -1,22 +1,22 @@
+const { query } = require("express");
 const Contact = require("../model/contact");
 
 const listContacts = async (userId, query) => {
-  // const results = await Contact.find({ owner: userId }).populate({
-  //   path: "owner",
-  //   select: "name email subscription",
-  // });
   const {
     sortBy,
     sortByDesc,
+    favorite,
     filter,
     isFavorite = null,
-    limit = 20,
+    limit = 5,
     offset = 0,
   } = query;
+  console.log(query);
   const optionsSearch = { owner: userId };
   if (isFavorite !== null) {
     optionsSearch.favorite = isFavorite;
   }
+
   const results = await Contact.paginate(optionsSearch, {
     limit,
     offset,
@@ -24,7 +24,9 @@ const listContacts = async (userId, query) => {
       ...(sortBy ? { [`${sortBy}`]: 1 } : {}),
       ...(sortByDesc ? { [`${sortByDesc}`]: -1 } : {}),
     },
-    select: filter ? filter.split("|").join(" ") : "",
+    select: {
+      ...(filter ? filter.split("|").join(" ") : ""),
+    },
     populate: { path: "owner", select: "name email subscription" },
   });
   return results;

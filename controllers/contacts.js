@@ -4,7 +4,6 @@ const { HttpCode } = require("../helpers/constants");
 const listContacts = async (req, res, next) => {
   try {
     const userId = req.user.id;
-    console.log(userId);
     const { docs: contacts, ...rest } = await Contacts.listContacts(
       userId,
       req.query

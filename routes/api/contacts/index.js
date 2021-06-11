@@ -23,14 +23,16 @@ router
   .get("/:contactId", guard, validateContactId, ctrl.getContactById)
   .delete("/:contactId", guard, validateContactId, ctrl.removeContact)
   .put(
-    "/:contactId", guard,
+    "/:contactId",
+    guard,
     validateContactId,
     validationUpdateContact,
     ctrl.updateContact
   );
 
 router.patch(
-  "/:contactId/favorite", guard,
+  "/:contactId/favorite",
+  guard,
   validateContactId,
   validationUpdateFavoriteStatus,
   ctrl.updateStatusContact
