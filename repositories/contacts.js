@@ -1,28 +1,78 @@
+const { query } = require("express");
 const Contact = require("../model/contact");
 
-const listContacts = async () => {
-  const results = await Contact.find();
+const listContacts = async (userId, query) => {
+  const {
+    sortBy,
+    sortByDesc,
+    filter,
+    favorite = null,
+    limit = 5,
+    offset = 0,
+  } = query;
+  const contacts = {};
+  const optionsSearch = { owner: userId };
+  if (favorite !== null) {
+    optionsSearch.favorite = favorite;
+  }
+  if (favorite) {
+    contacts.favorite = {
+      regex: new RegExp(favorite),
+      options: "true|false",
+    };
+  }
+  const results = await Contact.paginate(optionsSearch, {
+    limit,
+    offset,
+    sort: {
+      ...(sortBy ? { [`${sortBy}`]: 1 } : {}),
+      ...(sortByDesc ? { [`${sortByDesc}`]: -1 } : {}),
+    },
+    select: {
+      ...(filter ? filter.split("|").join(" ") : ""),
+    },
+    populate: { path: "owner", select: "name email subscription" },
+  });
   return results;
 };
 
-const getContactById = async (contactId) => {
-  const result = await Contact.findById(contactId);
+const getContactById = async (userId, contactId) => {
+  const result = await Contact.findOne({
+    _id: contactId,
+    owner: userId,
+  }).populate({
+    path: "owner",
+    select: "name email subscription",
+  });
   return result;
 };
 
-const removeContact = async (contactId) => {
-  const result = await Contact.findByIdAndRemove(contactId);
+const removeContact = async (userId, contactId) => {
+  const result = await Contact.findOneAndRemove({
+    _id: contactId,
+    owner: userId,
+  }).populate({
+    path: "owner",
+    select: "name email subscription",
+  });
   return result;
 };
 
-const addContact = async (body) => {
-  const result = await Contact.create(body);
+const addContact = async (userId, body) => {
+  const result = await Contact.create({ owner: userId, ...body });
   return result;
 };
 
-const updateContact = async (contactId, body) => {
-  const result = await Contact.findByIdAndUpdate(contactId, body, {
-    new: true,
+const updateContact = async (userId, contactId, body) => {
+  const result = await Contact.findOneAndUpdate(
+    { contactId, owner: userId },
+    body,
+    {
+      new: true,
+    }
+  ).populate({
+    path: "owner",
+    select: "name email subscription",
   });
   return result;
 };
