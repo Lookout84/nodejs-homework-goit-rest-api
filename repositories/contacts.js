@@ -5,18 +5,22 @@ const listContacts = async (userId, query) => {
   const {
     sortBy,
     sortByDesc,
-    favorite,
     filter,
-    isFavorite = null,
+    favorite = null,
     limit = 5,
     offset = 0,
   } = query;
-  console.log(query);
+  const contacts = {};
   const optionsSearch = { owner: userId };
-  if (isFavorite !== null) {
-    optionsSearch.favorite = isFavorite;
+  if (favorite !== null) {
+    optionsSearch.favorite = favorite;
   }
-
+  if (favorite) {
+    contacts.favorite = {
+      regex: new RegExp(favorite),
+      options: "true|false",
+    };
+  }
   const results = await Contact.paginate(optionsSearch, {
     limit,
     offset,
