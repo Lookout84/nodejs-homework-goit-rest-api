@@ -16,15 +16,17 @@ const register = async (req, res, next) => {
       });
     }
 
-    const { id, name, email, subscription } = await Users.create(req.body);
+    const { id, name, email, subscription, avatarURL } = await Users.create(
+      req.body
+    );
 
     return res.status(HttpCode.CREATED).json({
       status: "success",
       code: HttpCode.CREATED,
-      user: { id, name, email, subscription },
+      user: { id, name, email, subscription, avatarURL },
     });
-  } catch (e) {
-    next(e);
+  } catch (error) {
+    next(error);
   }
 };
 
@@ -45,8 +47,8 @@ const login = async (req, res, next) => {
     const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "2h" });
     await Users.updateToken(id, token);
     return res.json({ status: "OK", code: HttpCode.OK, data: { token } });
-  } catch (e) {
-    next(e);
+  } catch (error) {
+    next(error);
   }
 };
 
@@ -55,8 +57,8 @@ const logout = async (req, res, next) => {
     const id = req.user.id;
     await Users.updateToken(id, null);
     return res.status(HttpCode.NO_CONTENT).json({ status: "No Content" });
-  } catch (e) {
-    next(e);
+  } catch (error) {
+    next(error);
   }
 };
 
@@ -69,23 +71,38 @@ const currentUser = async (req, res, next) => {
       code: HttpCode.OK,
       user: { name, email, subscription },
     });
-  } catch (e) {
-    next(e);
+  } catch (error) {
+    next(error);
   }
 };
 
 const updateUserSubscription = async (req, res, next) => {
   try {
-    const {subscription} = req.body;
+    const { subscription } = req.body;
     const id = req.user.id;
-    const  results  = await Users.updateUserSubscription({ _id: id }, subscription);
+    await Users.updateUserSubscription({ _id: id }, subscription);
     return res.status(HttpCode.OK).json({
       status: "OK",
       code: HttpCode.OK,
       user: { subscription },
     });
-  } catch (e) {
-    next(e);
+  } catch (error) {
+    next(error);
+  }
+};
+
+const updateUserAvatar = async (req, res, next) => {
+  try {
+    const { avatarUrl } = req.body;
+    const id = req.user.id;
+    await Users.updateUserAvatar({ _id: id }, avatarUrl);
+    return res.status(HttpCode.OK).json({
+      status: "OK",
+      code: HttpCode.OK,
+      user: { avatarUrl },
+    });
+  } catch (error) {
+    next(error);
   }
 };
 
@@ -95,4 +112,5 @@ module.exports = {
   logout,
   currentUser,
   updateUserSubscription,
+  updateUserAvatar,
 };
