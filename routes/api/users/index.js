@@ -2,6 +2,8 @@ const express = require("express");
 const router = express.Router();
 const ctrl = require("../../../controllers/users");
 const guard = require("../../../helpers/guard");
+const upload = require("../../../helpers/upload");
+
 const {
   validationCreateUser,
   validationLoginUser,
@@ -21,7 +23,7 @@ router.patch(
 router.patch(
   "/avatars",
   guard,
-  //   validationUpdateUserSubscription,
+  upload.single("avatarUrl"),
   ctrl.updateUserAvatar
 );
 
