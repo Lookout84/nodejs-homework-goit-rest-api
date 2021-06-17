@@ -26,7 +26,7 @@ const updateUserSubscription = async (id, subscription) => {
 };
 
 const updateUserAvatar = async (id, avatarURL) => {
-  return await User.findOneAndUpdate({ _id: id }, { avatarURL });
+  return await User.updateOne({ _id: id }, { avatarURL });
 };
 
 module.exports = {
