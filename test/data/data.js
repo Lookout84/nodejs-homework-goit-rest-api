@@ -1,8 +1,8 @@
 const newTestUser = {
-  name: 'Alex Alex',
-  email: 'new_alex_user@ex.ua',
-  password: '123456',
-  subscription: 'starter',
-}
+  name: "Alex Alex",
+  email: "new_alex_user@ex.ua",
+  password: "123456",
+  subscription: "starter",
+};
 
-module.exports = { newTestUser }
+module.exports = { newTestUser };
