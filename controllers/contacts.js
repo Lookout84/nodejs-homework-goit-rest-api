@@ -29,7 +29,7 @@ const getContactById = async (req, res, next) => {
         data: { contact },
       });
     }
-    return res.json({
+    return res.status(HttpCode.NOT_FOUND).json({
       status: "error",
       code: HttpCode.NOT_FOUND,
       message: "Not found",
@@ -48,7 +48,7 @@ const addContact = async (req, res, next) => {
         .status(HttpCode.CREATED)
         .json({ status: "success", code: HttpCode.CREATED, data: { contact } });
     }
-    return res.json({
+    return res.status(HttpCode.BAD_REQUEST).json({
       status: "error",
       code: HttpCode.BAD_REQUEST,
       message: "missing required name field",
@@ -69,7 +69,7 @@ const removeContact = async (req, res, next) => {
         data: { conatct },
       });
     }
-    return res.json({
+    return res.status(HttpCode.NOT_FOUND).json({
       status: "error",
       code: HttpCode.NOT_FOUND,
       message: "Not found",
@@ -94,7 +94,7 @@ const updateContact = async (req, res, next) => {
         data: { conatct },
       });
     }
-    return res.json({
+    return res.status(HttpCode.NOT_FOUND).json({
       status: "error",
       code: HttpCode.NOT_FOUND,
       message: "Not found",
@@ -119,7 +119,7 @@ const updateStatusContact = async (req, res, next) => {
         data: { contact },
       });
     }
-    return res.json({
+    return res.status(HttpCode.NOT_FOUND).json({
       status: "error",
       code: HttpCode.NOT_FOUND,
       message: "Not found",
