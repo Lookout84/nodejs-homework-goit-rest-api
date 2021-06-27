@@ -1,11 +1,11 @@
 const mongoose = require("mongoose");
 require("dotenv").config();
-let uriDb = null
+let uriDb = null;
 
-if (process.env.NODE_ENV === 'test') {
-  uriDb = process.env.URI_DB_TEST
+if (process.env.NODE_ENV === "test") {
+  uriDb = process.env.URI_DB_TEST;
 } else {
-  uriDb = process.env.URI_DB
+  uriDb = process.env.URI_DB;
 }
 
 const db = mongoose.connect(uriDb, {
