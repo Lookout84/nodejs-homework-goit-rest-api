@@ -3,7 +3,7 @@ const { isEmail } = require("validator");
 const { Subscription } = require("../helpers/constants");
 const bcrypt = require("bcryptjs");
 const gravatar = require("gravatar");
-const { nanoid } = require('nanoid')
+const { nanoid } = require("nanoid");
 
 const SALT_WORK_FACTOR = 8;
 
@@ -40,7 +40,7 @@ const userSchema = new Schema(
     verify: { type: Boolean, default: false },
     verifyToken: {
       type: String,
-      required: [true, 'Verify token is required'],
+      required: [true, "Verify token is required"],
       default: nanoid(),
     },
   },
